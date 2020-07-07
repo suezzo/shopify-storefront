@@ -1,11 +1,16 @@
 import Head from 'next/head';
 import { useQuery } from '@apollo/react-hooks';
-import { GET_PRODUCTS } from 'graphql/queries/getProducts';
+import {
+  GET_PRODUCTS,
+  GET_BESTSELLING_PRODUCTS,
+} from 'graphql/queries/getProducts';
 import withApollo from 'graphql/withApollo';
 import { getDataFromTree } from '@apollo/react-ssr';
+import { ProductsList } from 'components/ProductsList';
+import { Container } from '@material-ui/core';
 
 const HomePage = () => {
-  const { loading, error, data } = useQuery(GET_PRODUCTS);
+  const { loading, error, data } = useQuery(GET_BESTSELLING_PRODUCTS);
 
   return (
     <div className="container">
@@ -15,14 +20,10 @@ const HomePage = () => {
       </Head>
 
       <main>
-        {loading && <h1>Loading...</h1>}
-        {data && (
-          <ul>
-            {data.products.edges.map((product) => (
-              <li>{product.node.title}</li>
-            ))}
-          </ul>
-        )}
+        <Container fixed>
+          {loading && <h1>Loading...</h1>}
+          {data && <ProductsList products={data.products.edges} />}
+        </Container>
       </main>
 
       <footer></footer>
